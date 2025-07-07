@@ -4,6 +4,8 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 
+const authRouter = require("./routers/authRouter");
+
 const app = express();
 app.use(cors());
 app.use(helmet());
@@ -19,6 +21,8 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+
+app.use("/api/auth", authRouter);
 
 app.get("/", (req, res) => {
   res.json({ message: "Hello from the server" });
