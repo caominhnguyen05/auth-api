@@ -116,3 +116,31 @@ exports.updatePost = async (req, res) => {
     console.log(error);
   }
 };
+
+exports.deletePost = async (req, res) => {
+  const { _id } = req.query;
+  const { userId } = req.user;
+
+  try {
+    const existingPost = await Post.findOne({ _id });
+    if (!existingPost) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Post cannot be found." });
+    }
+
+    if (existingPost.userId.toString() !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized. You cannot delete this post",
+      });
+    }
+
+    await Post.deleteOne({ _id });
+    res
+      .status(200)
+      .json({ success: true, message: "Post deleted successfully!" });
+  } catch (error) {
+    console.log(error);
+  }
+};
