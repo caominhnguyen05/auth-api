@@ -1,3 +1,4 @@
+const { createPostSchema } = require("../middlewares/validator");
 const Post = require("../models/postsModel");
 
 exports.getPosts = async (req, res) => {
@@ -20,6 +21,28 @@ exports.getPosts = async (req, res) => {
         select: "email",
       });
     res.status(200).json({ success: true, message: "Posts", data: result });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.createPost = async (req, res) => {
+  const { title, description } = req.body;
+  const { userId } = req.user;
+  try {
+    const { error, value } = createPostSchema.validate({
+      title,
+      description,
+      userId,
+    });
+    if (error) {
+      return res
+        .status(401)
+        .json({ success: false, message: error.details[0].message });
+    }
+
+    const result = await Post.create({ title, description, userId });
+    res.status(201).json({ success: true, message: "created", data: result });
   } catch (error) {
     console.log(error);
   }
