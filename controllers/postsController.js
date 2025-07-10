@@ -47,3 +47,22 @@ exports.createPost = async (req, res) => {
     console.log(error);
   }
 };
+
+exports.getSinglePost = async (req, res) => {
+  const { _id } = req.query;
+  try {
+    const result = await Post.findOne({ _id }).populate({
+      path: "userId",
+      select: "email",
+    });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Get single post success",
+        data: result,
+      });
+  } catch (error) {
+    console.log(error);
+  }
+};
