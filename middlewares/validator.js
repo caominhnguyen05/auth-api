@@ -72,3 +72,9 @@ exports.acceptFPCodeSchema = Joi.object({
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
     ),
 });
+
+exports.createPostSchema = Joi.object({
+  title: Joi.string().min(1).max(60).required(),
+  description: Joi.string().min(1).max(600).required(),
+  userId: Joi.string().required(),
+});
